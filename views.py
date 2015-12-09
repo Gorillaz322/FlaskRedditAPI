@@ -15,7 +15,7 @@ def get_hot_article_ids():
     ids_list = [article['data']['id'] for article in response['data']['children']]
     return ids_list
 
-
+#test
 def get_articles_comments(ids_list):
 
     def get_comment_texts(comments_info):
