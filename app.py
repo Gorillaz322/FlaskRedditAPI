@@ -1,10 +1,11 @@
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
+from main import local, config
 
 app = Flask(__name__)
-app.debug = True
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-    "postgresql://postgres:123@localhost/flask_reddit_api"
+app.debug = config.DEBUG
+app.config['SQLALCHEMY_DATABASE_URI'] = local.SQLALCHEMY_DATABASE_URI
 db = SQLAlchemy(app)
 
-from main import models, views
+import main.models
+import main.views
