@@ -68,7 +68,7 @@ class WordsCount(db.Model):
                 WordsCount.word == word_obj,
                 WordsCount.comment == comment_obj).one()
             if count_obj.count != count:
-                count_to_update = comment_obj.count - count
+                count_to_update = count_obj.count - count
                 db.session.query(WordsCount).filter_by(id=count_obj.id).update({'count': count})
             created = False
         except NoResultFound:
