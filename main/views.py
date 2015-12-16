@@ -29,6 +29,7 @@ def get_most_popular_words_dict():
 def get_hot_article_ids():
     response = json.loads(requests.get(main.config.HOT_ARTICLES_URL, headers=main.config.HEADERS).content)
     ids_list = [article['data']['id'] for article in response['data']['children']]
+    logger.info('RECEIVED ARTICLES')
     return ids_list
 
 
@@ -51,7 +52,7 @@ def get_articles_comments(ids_list, get_ids=False):
         return comment_texts
 
     comments = []
-    for article_id in ids_list:
+    for article_id in ids_list[:3]:
         response = json.loads(
             requests.get(main.config.ARTICLE_COMMENTS_URL.format(article_id), headers=main.config.HEADERS).content)
 
@@ -69,6 +70,7 @@ def add_comments():
     """
     comments = get_articles_comments(get_hot_article_ids(), get_ids=True)
     for index, comment in enumerate(comments):
+        logger.info('[VIEW COMMENT {}]'.format(index))
         comment_id, comment_text = comment
         print('[VIEW] Comment {}'.format(index))
 
@@ -90,7 +92,7 @@ def add_comments():
             word_obj, created = Word.add(word)
             WordsCount.add(comment_obj, word_obj, count)
 
-    db.session.commit()
+        db.session.commit()
 
     return render_template("stats.html", data=comments)
 
