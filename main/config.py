@@ -1,3 +1,5 @@
+import os
+
 HEADERS = {
     "User-Agent": "CustomAPI"
 }
@@ -14,3 +16,5 @@ HOT_ARTICLES_URL = "https://reddit.com/hot/.json"
 ARTICLE_COMMENTS_URL = "https://reddit.com/comments/{}/.json"
 
 DEBUG = True
+
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
