@@ -92,7 +92,7 @@ def add_comments():
 
     db.session.commit()
 
-    return render_template("home.html", data=comments)
+    return render_template("stats.html", data=comments)
 
 
 def get_words_count(text):
@@ -108,7 +108,7 @@ def get_words_count(text):
 
 @app.route('/stats')
 def get_stats():
-    return render_template("home.html", data=db.session.query(Word).order_by('count')[::-1])
+    return render_template("stats.html", data=db.session.query(Word).order_by('count')[::-1])
 
 
 def get_img_urls_from_string(string):
