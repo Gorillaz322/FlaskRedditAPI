@@ -1,4 +1,4 @@
-import os
+from itertools import islice
 import logging
 from app import app, db
 from flask import render_template
@@ -9,35 +9,21 @@ from collections import defaultdict
 import main.config
 from models import Comment, WordsCount, Word, Image
 import mimetypes
-import numpy as np
-import matplotlib.pyplot as plt
 
 logger = logging.getLogger(__name__)
 
 
 @app.route('/chart')
-def chart():
-    chart_word_count = 10
+def get_most_popular_words_dict():
+    chart_word_count = 50
+    words = []
+    for word in list(islice(db.session.query(Word).order_by('count')[::-1], 0, chart_word_count)):
+        words.append({
+            'word': word.text,
+            'count': word.count
+        })
 
-    word_count = []
-    word_text = []
-    for word in db.session.query(Word).order_by('count')[::-1][:chart_word_count]:
-        word_count.append(word.count)
-        word_text.append(word.text)
-
-    ind = np.arange(chart_word_count)
-    width = 1
-
-    fig, ax = plt.subplots()
-    ax.bar(ind, word_count, width, color='r')
-
-    ax.set_xticks(ind + float(width)/2)
-    ax.set_xticklabels(word_text)
-
-    chart_url = '{}/static/charts/popular_words.png'.format(os.getcwd())
-    plt.savefig(chart_url, dpi=200)
-
-    return render_template('chart.html', chart_url=chart_url)
+    return render_template('chart.html', data=json.dumps(words))
 
 
 def get_hot_article_ids():
