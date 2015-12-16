@@ -121,6 +121,6 @@ def get_img_urls_from_string(string):
     return img_urls
 
 
-@app.route('/get_imgs')
+@app.route('/imgs')
 def get_imgs():
     return render_template('imgs.html', data=db.session.query(Image).all())
