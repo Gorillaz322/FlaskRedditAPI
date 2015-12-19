@@ -21,7 +21,7 @@ function chartHandler(data) {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function (d) {
-            return "<strong>Count:</strong> <span style='color:red'>" + d.count + "</span>";
+            return "<strong>Count:</strong> <span style='color:#ffffff'>" + d.count + "</span>";
         });
 
     var svg = d3.select("body").append("svg")
@@ -71,9 +71,34 @@ function chartHandler(data) {
         .on('mouseover', tip.show)
         .on('mouseout', tip.hide);
 
-
-    function type(d) {
-        d.count = +d.count;
-        return d;
-    }
+    $('.bar').each(function(index){
+        var color = colorLuminance("#01B169", (1/125 * (index + 0.1)));
+        this.style.fill = color;
+        $(this).on('mouseover', function(){
+            this.style.fill = colorLuminance(color, -0.3);
+        });
+        $(this).on('mouseout', function(){
+            this.style.fill = color;
+        });
+    });
 }
+
+function colorLuminance(hex, lum) {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+        if (hex.length < 6) {
+            hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+        }
+        lum = lum || 0;
+
+        // convert to decimal and change luminosity
+        var rgb = "#", c, i;
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i * 2, 2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            rgb += ("00" + c).substr(c.length);
+        }
+
+        return rgb;
+    }
